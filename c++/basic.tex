@@ -1,0 +1,119 @@
+\documentclass{article}
+
+\usepackage{xcolor}
+\usepackage{listings}
+
+\usepackage[colorlinks = true,
+            linkcolor = blue,
+            urlcolor  = blue,
+            citecolor = blue,
+            anchorcolor = blue]{hyperref}
+\newcommand{\MYhref}[3][blue]{\href{#2}{\color{#1}{#3}}}%
+
+\renewcommand{\lstlistingname}{Program}
+\newcommand{\CC}{C\texttt{++}}
+\title{Introduction to \CC}
+
+\begin{document}
+\maketitle
+
+\lstset{language=C++,
+	numbers=left,
+	basicstyle=\ttfamily,
+	keywordstyle=\color{blue}\ttfamily,
+	stringstyle=\color{red}\ttfamily,
+	commentstyle=\color{green}\ttfamily,
+	morecomment=[l][\color{magenta}]{\#}
+}
+
+\section{Motivation}
+
+\subsection{What is \CC?}
+\CC\ is another programming language.
+
+\subsection{Why do we need another language?}
+That is a pretty good question.
+We already know python, so why should we need another language?
+
+It turns out that \CC\ is much better than python for writing code which runs fast.
+
+That sounds pretty dumb, why can't python also be faster?
+They run on the same computer, so they should have same speed no?
+
+No, it turns out that \CC\ is a much less forgiving language, and as the programmer,
+you have to do a lot more work. This sounds like a bad deal, but it turns out that
+this lets you make better decisions (essentially micro-manage), which leads to faster
+code overall.
+
+What do we mean by ``less forgiving''?
+Let's find out.
+
+\section{Basic structure}
+
+\subsection{What does a \CC\ program look like?}
+
+\lstinputlisting[caption=this does nothing]{empty.cpp}
+
+Before we run through an explanation, you should try to type this program out
+(don't copy and paste, it will not work)
+on \href{http://codechef.com/ide}{an online IDE}, and run it.
+
+\newpage
+
+Now, the first line of the program contains the words \lstinline{int main()}.
+\lstinline{int} is a data-type in \CC\ that is used to represent integers.
+
+Wait, what's that again?
+We've never had to deal with this ``data-type'' nonsense in python.
+
+Remember how we had variables in python?
+We have them here too.
+Except this time, instead of just asking the computer for a ``box''
+where we store some value, we also have to tell the computer what kind of 
+value we will store.
+
+Phew, ok, \lstinline{int} is a way to tell the computer we want to store an
+integer. But we aren't storing any integers here!
+
+Actually, \lstinline{int main()} is a \emph{function}, which returns an \lstinline{int}.
+Why are we already looking at a function (aren't those the scary things we did
+after a week of learning python)? \\
+It turns out that when you run a \CC\ program, the computer doesn't simply start
+running from the first line of code it sees (like python).
+Instead, it politely looks for an \emph{entry point}, like a door to enter your house.
+Now, of course, a programming language has no doors. So the \emph{entry point}
+is instead a function that the computer executes when you run the program.
+
+Hmph, this seems so dumb.
+Anyway, 
+what are those \verb|{}| things?
+The part between the \verb|{}| is the actual function definition.
+
+Remember how in python, when we define a function, we place everything which is part
+of the function one indent level deeper than \verb|def function_name|?
+It turns out \CC\ does not care for indents.
+It uses \verb|{| to denote the beginning of the function, and the corresponding \verb|}|
+to denote the end.
+
+Now, of course we come to the statement in line 3, which says \lstinline{return 0;}.
+Note how this line is terminated by a semi-colon \lstinline{;}.
+In C++, unlike python, every line of code is terminated by a \lstinline{;}.
+The reasons for this choice are beyond the scope of this article.
+
+We're familiar with all of the other things in line 3 (ie. \lstinline{return} and
+\lstinline{0}).
+And we're returning an \lstinline{int}, just like we promised in line 1, so the 
+computer should be happy.
+But why \lstinline{0}? Well, it turns out that if you return \lstinline{0}, 
+the computer takes this to mean that everything went off without a hitch, right according to plan.
+
+Try changing the program, to return \lstinline{1} instead, run, and read the error message that pops up.
+
+Try changing the program to blank (remove the entire function \lstinline{main}), run, and read the error message
+that pops up.
+
+Phew, that was a lot of work for a program that doesn't even do anything.
+
+\end{document}
+
+

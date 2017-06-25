@@ -1,0 +1,206 @@
+\documentclass{article}
+
+\usepackage{mathtools}
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{xcolor}
+\usepackage[colorlinks = true,
+            linkcolor = blue,
+            urlcolor  = blue,
+            citecolor = blue,
+            anchorcolor = blue]{hyperref}
+\newcommand{\MYhref}[3][blue]{\href{#2}{\color{#1}{#3}}}%
+
+\usepackage{amsfonts}
+
+\DeclarePairedDelimiter{\braces}{(}{)}
+
+\title{Algorithm Analysis}
+\setlength{\parindent}{0cm}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{definition}{Definition}
+
+\begin{document}
+\maketitle
+
+\section{Introduction: Two algorithms for a simple problem}
+Your math teacher enters the class, and asks you to find a way
+to compute $1 + 2 + \dots + N$, given the natural number $N$.
+
+Ha, you write a simple program in your favourite language which
+runs a loop from $1$ to $N$, and adds each value to a sum variable.
+
+Feeling rather good about yourself, you decide to take a look over
+at your partner's work, and they've simply written the formula
+
+\[\frac{N\times(N + 1)}2\]
+
+Ah, well, at least your solution is still correct, maybe not as
+fancy as your partner's.
+
+In a dramatic twist of events, the teacher decides to actually run
+your program on the computer, with $N = 10^{10}$.
+
+You watch in pain as your program gets stuck for almost a minute
+before finally throwing out $50000000005000000000$ ; 
+Your partner's formula converted to code outputs the same value instantly.
+
+\rule{\textwidth}{0.25pt}
+
+What happened there?
+
+Well, so far, we've always thought that computers are \emph{fast}.
+Our piddly human brains are so far behind that not only can we not
+keep up with them, we can't even understand how far behind we are.
+
+Except the last bit is false.
+We have a rough idea as to how fast \emph{fast} is.
+
+Your modern desktop PC can perform $\sim 10^8$ operations per second.
+While that is an insanely large number, it is \emph{not} infinite.
+
+So when you ran your program which does $N$ additions to compute
+$1 + 2 + \dots + N$ with $N = 10^{10}$, you asked the computer to do
+$10^{10}$ operations, which, by the estimate above, should take $\sim 100$
+seconds.
+Whereas your partner's idea does this in a single addition,
+followed by a multiplication, followed by a division by $2$.
+
+By looking at your code, it should be clear that when it is given $N$
+as input, it takes $N$ additions to compute the required sum.
+And looking at your partner's formular, it should be clear that given $N$ as
+input, it takes $3$ operations to compute the required sum.  
+This is the fundamental idea of algorithm analysis.
+You \emph{count} the number of steps your program takes to execute, and
+try to figure out how it grows as your input becomes larger.
+
+\section{A more complicated example} \label{rsq}
+
+Let's look at a very popular traditional question.
+
+\vspace{1em}
+
+You are given an array $A$ of size $N$,
+and then asked $Q$ questions, each of which gives two indices, 
+$i$ and $j$, such that $0 \leq i \leq j < N$.
+
+For each question, you have to find the sum
+$A_i + A_{i + 1} + \dots + A_j$.
+
+Take a minute to think about your solution.
+
+.
+
+.
+
+.
+
+\subsection{The easy solution} \label{naive-rsq}
+Ah, we can just run a loop from $i$ to $j$, and within the loop, add
+the corresponding element of $A$ to a \verb|sum| variable.
+
+Well that was easy.
+
+\subsubsection{A small problem}
+
+What if we have a lot of questions, and a very big array?
+Say $N = 10^5$, and $Q = 10^5$.
+(you may wonder why anyone is so interested in a dumb array, but
+such questions are beyond the scope of this write-up)
+
+Let's try to count the number of steps our solution would take.
+
+For convenience, let's denote the $k^{\texttt{th}}$ query by
+$(i_k, j_k)$.
+Then, to answer the first query, our solution takes
+$j_1 - i_1 + 1$ steps, to answer the second query, $j_2 - i_2 + 1$
+steps, and so on.
+
+To answer all the queries, our solution takes
+$\braces*{j_1 - i_1 + 1} + \braces*{j_2 - i_2 + 1} + \dots + \braces*{j_Q - i_Q + 1}$
+steps, which is $\sum_{k = 1}^Q \braces*{j_k - i_k + 1}$ steps.
+
+Well this is nice, but what information does it give us?
+Is our solution too slow?
+Is it ok?
+Is it too fast? (this doesn't happen very often $\ddot\smallsmile$)
+
+Of course, our user could be very benevolent, and always give us
+questions where $i = j$, in which case our solution will run in
+$\sum_{k = 1}^Q 1 = Q$ steps (which is pretty great, right?).
+
+On the other hand, our user could be our worst nightmare, and always ask
+questions where $i = 1$, and $j = N$, in which case our solution will
+run in $\sum_{k = 1}^Q N = Q \times N$ steps, which will mean $10^{10}$
+operations $\ddot\smallfrown$
+
+In general, the safe assumption to make is that the worst thing that could
+happen is going to happen (this is also true of life $\ddot\smallfrown$).
+
+So, giving up our exact formula for the number of steps, 
+$\sum_{k = 1}^Q \braces*{j_k - i_k + 1}$
+and trading it in for an \emph{upper bound},
+$Q \times N$, actually gives us much more useful information
+(here the takeaway is that our algorithm is too slow).
+
+This is an important principle of \emph{algorithm analysis};
+we dump the exact formulae, and try to get some \emph{idea}
+of how the algorithm performs as the input size increases.
+
+\section{Big-$O$ notation}
+
+Often, as in the solution in sub-section \ref{naive-rsq}, we 
+replace the exact formula for the number of steps an algorithm takes,
+and replace it by an upper bound.
+
+So instead of $j - i + 1$, where $j$ and $i$ are part of questions,
+we instead note that $j - i + 1 \leq N$, and hence $N$ is a suitable
+replacement.
+
+This is also written as $j - i + 1 = O(N)$, and read as
+$j - i + 1$ is Big-$O$ of $N$.
+
+Now it would be rather useless to define a new symbol just to say that
+$j - i + 1 \leq N$; so we ask the following question.
+
+\vspace{1em}
+
+Do we really care about constant factors?
+Is there really a huge difference in the time it takes a computer to take
+$2\times N$ steps, as opposed to $N$, steps?
+
+(ye gads, this is double that)
+
+It turns out that we don't really care; what we are worried about
+is how the number of steps grows as the input becomes larger and larger.
+So even though $2N > N$ for all $N > 1$, we note that they are
+always within a constant factor of $2$ of each other, and hence
+are essentially the same for us.
+
+So we allow $2N = O(N)$ (and also $3N = O(N)$, and so on).
+Note that $2$ and $3$ are both constants, which do not change with the ``input''.
+
+We cannot have $QN = O(N)$, because $Q$ is a value that can increase as input becomes larger,
+and is hence not a \emph{constant}.
+
+\vspace{1em}
+
+Well there we have it; if \emph{something} is
+$<= N$, or $<= k\times N$, where $k$ is some constant, we
+say that that \emph{something} is $O(N)$.
+
+Why should we restrict ourselves to $N$?
+What about $N^2$, $N\log N$, and all of our polynomial friends?
+
+\begin{definition}[Big-$O$ notation]
+	We say that an expression (for example a summation, or a function)
+	is $O(f)$, if the expression is $\leq k\times f(N)$.
+	\footnote{there is an additional technicality we are ignoring, feel free
+	to read the correct definition on the Internet, if you are comfortable with
+	all of this}
+\end{definition}
+
+Here, $f$ can be any function, like $f(N) = N^2$, or some such.
+\end{document}
